@@ -28,26 +28,23 @@ echo "[6] Installing Kubernetes Components (kubeadm, kubelet, kubectl)..."
 sudo apt install -y kubeadm=1.28.1-1.1 kubelet=1.28.1-1.1 kubectl=1.28.1-1.1
 sudo apt-mark hold kubelet kubeadm kubectl
 
-if [ "$(hostname)" == "$MASTER_NODE_NAME" ]; then
-    echo "[7] Initializing Kubernetes Master Node..."
-    sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+echo "[7] Initializing Kubernetes Master Node..."
+sudo kubeadm init --pod-network-cidr=10.244.0.0/16
 
-    echo "[8] Configuring Kubernetes Cluster (kubectl)..."
-    mkdir -p $HOME/.kube
-    sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-    sudo chown $(id -u):$(id -g) $HOME/.kube/config
+echo "[8] Configuring Kubernetes Cluster (kubectl)..."
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
-    echo "[9] Deploying Calico Networking Solution..."
-    kubectl apply -f https://docs.projectcalico.org/v3.20/manifests/calico.yaml
+echo "[9] Deploying Calico Networking Solution..."
+kubectl apply -f https://docs.projectcalico.org/v3.20/manifests/calico.yaml
 
-    echo "[10] Deploying Ingress Controller (NGINX)..."
-    kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.49.0/deploy/static/provider/baremetal/deploy.yaml
+echo "[10] Deploying Ingress Controller (NGINX)..."
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.49.0/deploy/static/provider/baremetal/deploy.yaml
 
-    echo "[11] Installing kubeaudit for Cluster Security Scanning..."
-    wget https://github.com/Shopify/kubeaudit/releases/latest/download/kubeaudit_0.22.0_linux_amd64.tar.gz
-    tar -xvf kubeaudit_0.22.0_linux_amd64.tar.gz
-    sudo mv kubeaudit /usr/local/bin/
-    kubeaudit all
-else
-    echo "This is a Worker Node. Use the token from Master Node to join the cluster."
-fi
+echo "[11] Installing kubeaudit for Cluster Security Scanning..."
+wget https://github.com/Shopify/kubeaudit/releases/latest/download/kubeaudit_0.22.0_linux_amd64.tar.gz
+tar -xvf kubeaudit_0.22.0_linux_amd64.tar.gz
+sudo mv kubeaudit /usr/local/bin/
+kubeaudit all
+
