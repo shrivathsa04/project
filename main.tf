@@ -1,6 +1,6 @@
 resource "aws_instance" "ci-cd" {
     ami = "ami-084568db4383264d4"
-    # count = 3
+    count = 2
     instance_type = "t2.medium"
     key_name = aws_key_pair.deployer_key.key_name
     vpc_security_group_ids = [aws_security_group.ssh_sg.id]
